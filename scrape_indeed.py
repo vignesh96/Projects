@@ -19,7 +19,7 @@ class ScrapeIndeed(object):
         self.what = input("Enter the role/job you want : ")
         self.city = input("Enter the city of preference : ")
         self.state = input("Enter the state of preference : ")
-        self.params = {"q": self.what.strip(), "l": self.state.strip(), "start": "0"}
+        self.params = {"q": self.what.strip(), "l": self.city.strip(), "start": "0"}
 
     def extract_job_titles(self, soup):
         try:
@@ -35,11 +35,13 @@ class ScrapeIndeed(object):
         # Get frequency of job titles
         job_title_df = pd.Series(self.job_titles_list)
         job_freqs = job_title_df.value_counts().to_dict()
-        plt.figure(figsize=(8, 36))
-        plt.barh(y=list(job_freqs.keys()), width=list(job_freqs.values()))
-        plt.ylabel("Job Titles", fontsize=5)
-        plt.xlabel("# of Job Titles", fontsize=5)
-        plt.yticks(np.arange(0, len(list(job_freqs.keys()))))
+        num_of_items = len(list(job_freqs.keys()))
+        ind = np.arange(0, num_of_items*2, 2)
+        plt.figure(figsize=(100, 20))
+        plt.bar(ind, list(job_freqs.values()), width=1, align='center', color='green')
+        plt.xlabel("Job Titles", fontsize=5)
+        plt.ylabel("# of Job Titles", fontsize=5)
+        plt.xticks(ind, list(job_freqs.keys()), rotation=90)
         plt.title("Number of Job Titles")
         plt.show()
 
