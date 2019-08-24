@@ -1,6 +1,3 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
@@ -22,7 +19,6 @@ class ScrapeIndeed(object):
         self.state = input("Enter the state of preference : ")
         self.params = {"q": self.what.strip(), "l": self.city.strip() + ", " + self.state.strip(), "start": 0}
 
-
     def start_process(self):
         try:
             self.get_input()
@@ -37,7 +33,8 @@ class ScrapeIndeed(object):
                 # print(response.text)
                 soup = BeautifulSoup(response.text, "html.parser")
                 total_results = soup.find(id="searchCount").get_text()
-                page_number = int(total_results[total_results.index("e") + 1:total_results.index("of")].replace(",", "").strip())
+                page_number = int(
+                    total_results[total_results.index("e") + 1:total_results.index("of")].replace(",", "").strip())
                 print(page_number)
                 if page_no == page_number:
                     self.soups.append(soup)

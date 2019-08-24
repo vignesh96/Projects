@@ -1,8 +1,10 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-from datetime import datetime
 import os
+from datetime import datetime
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
 
 class ExtractJob(object):
 
@@ -23,7 +25,7 @@ class ExtractJob(object):
                     title = a["title"]
 
                 # Extract Company name
-                company_link = div.find(name="span", attrs={"class":"company"})
+                company_link = div.find(name="span", attrs={"class": "company"})
                 company = company_link.find(name="a", attrs={"class": "turnstileLink"})
 
                 if not company:
@@ -38,7 +40,7 @@ class ExtractJob(object):
                     location = None
                 else:
                     location = location.text
-                #print(location)
+                # print(location)
 
                 # Salary of the job
                 salary = div.find(name="span", attrs={"class": "salary"})
@@ -50,7 +52,7 @@ class ExtractJob(object):
                 # Get job descriptions
                 span = div.find("div", attrs={"class": "summary"})
                 job_desc = span.text.strip()
-                #print(job_desc)
+                # print(job_desc)
                 jobs_info.append([title, company, location, salary, job_desc])
             return (jobs, jobs_info)
         except Exception as exception_msg:
