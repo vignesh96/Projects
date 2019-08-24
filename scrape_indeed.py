@@ -27,6 +27,7 @@ class ScrapeIndeed(object):
         try:
             jobs = []
             jobs_info = []
+            job_desc = []
             for div in soup.find_all(name="div", attrs={"class": "row"}):
                 # Extract job titles
                 for a in div.find_all(name="a", attrs={"data-tn-element": "jobTitle"}):
@@ -44,7 +45,13 @@ class ScrapeIndeed(object):
                 print(company)
 
                 # Extract Location of the Comapany
-                
+                location = div.find(name="spam", attrs={"class": "location"})
+
+                if not location:
+                    location = None
+                else:
+                    location = location.text
+                #print(location)
 
                 # Salary of the job
                 salary = div.find(name="span", attrs={"class": "salary"})
@@ -52,7 +59,12 @@ class ScrapeIndeed(object):
                     salary = None
                 else:
                     salary = salary.text.strip()
-                jobs_info.append([title, company, salary])
+
+                # Get job descriptions
+                span = div.find("div", attrs={"class": "summary"})
+                job_desc = span.text.strip()
+                #print(job_desc)
+                jobs_info.append([title, company, location, salary, job_desc])
             return (jobs, jobs_info)
         except Exception as exception_msg:
             print(exception_msg)
@@ -107,7 +119,7 @@ class ScrapeIndeed(object):
 
             print(self.job_titles_list)
             print(self.job_details_list)
-            self.plot_frequency_job_titles()
+            # self.plot_frequency_job_titles()
 
         except Exception as exp_msg:
             print(exp_msg)
