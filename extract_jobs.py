@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from datetime import datetime
+import os
 
 class ExtractJob(object):
 
@@ -8,6 +10,8 @@ class ExtractJob(object):
         self.job_titles_list = []
         self.job_details_list = []
         self.soups = soups
+        self.columns = ["job_title", "company", "location", "salary", "job_description"]
+
     def extract_job_infos(self, soup):
         try:
             jobs = []
@@ -26,7 +30,6 @@ class ExtractJob(object):
                     company = company_link.text.strip()
                 else:
                     company = company.text.strip()
-                print(company)
 
                 # Extract Location of the Comapany
                 location = div.find(name="spam", attrs={"class": "location"})
@@ -72,5 +75,9 @@ class ExtractJob(object):
             job_title_page, jobs_info = self.extract_job_infos(s)
             self.job_titles_list.extend(job_title_page)
             self.job_details_list.extend(jobs_info)
-            print(job_title_page)
-            print(len(self.job_titles_list))
+
+        indeed_jobs_frame = pd.DataFrame(self.job_details_list)
+        indeed_jobs_frame.transpose()
+        indeed_jobs_frame.columns = self.columns
+        file_name_csv = os.path.join(os.getcwd(), "scrapped_data", "indeed-{}.csv".format(datetime.now().date()))
+        indeed_jobs_frame.to_csv(open(file_name_csv, 'a+', encoding='utf-8'), sep="|", na_rep=None)
