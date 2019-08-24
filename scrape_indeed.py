@@ -32,14 +32,27 @@ class ScrapeIndeed(object):
                 for a in div.find_all(name="a", attrs={"data-tn-element": "jobTitle"}):
                     jobs.append(a["title"])
                     title = a["title"]
+
+                # Extract Company name
+                company_link = div.find(name="span", attrs={"class":"company"})
+                company = company_link.find(name="a", attrs={"class": "turnstileLink"})
+
+                if not company:
+                    company = company_link.text.strip()
+                else:
+                    company = company.text.strip()
+                print(company)
+
+                # Extract Location of the Comapany
                 
+
                 # Salary of the job
                 salary = div.find(name="span", attrs={"class": "salary"})
                 if not salary:
                     salary = None
                 else:
                     salary = salary.text.strip()
-                jobs_info.append([title, salary])
+                jobs_info.append([title, company, salary])
             return (jobs, jobs_info)
         except Exception as exception_msg:
             print(exception_msg)
