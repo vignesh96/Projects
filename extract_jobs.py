@@ -32,7 +32,7 @@ class ExtractJob(object):
                     company = company.text.strip()
 
                 # Extract Location of the Comapany
-                location = div.find(name="spam", attrs={"class": "location"})
+                location = div.find(name="span", attrs={"class": "location"})
 
                 if not location:
                     location = None
