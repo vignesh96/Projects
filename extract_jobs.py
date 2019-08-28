@@ -12,7 +12,7 @@ class ExtractJob(object):
         self.job_titles_list = []
         self.job_details_list = []
         self.soups = soups
-        self.columns = ["job_title", "company", "location", "salary", "job_description"]
+        self.columns = ["job_title", "company", "location", "salary", "job_description", "data_jk", "data_empn"]
 
     def extract_job_infos(self, soup):
         try:
@@ -52,8 +52,14 @@ class ExtractJob(object):
                 # Get job descriptions
                 span = div.find("div", attrs={"class": "summary"})
                 job_desc = span.text.strip()
+
+                # Get attributes for fetching the content
+                data_jk = div["data-jk"]
+                data_empn = div.get("data-empn", "")
+                print(data_jk, data_empn)
                 # print(job_desc)
-                jobs_info.append([title, company, location, salary, job_desc])
+                jobs_info.append([title, company, location, salary, job_desc, data_jk, data_empn])
+
             return (jobs, jobs_info)
         except Exception as exception_msg:
             print(exception_msg)
@@ -82,4 +88,4 @@ class ExtractJob(object):
         indeed_jobs_frame.transpose()
         indeed_jobs_frame.columns = self.columns
         file_name_csv = os.path.join(os.getcwd(), "scrapped_data", "indeed-{}.csv".format(datetime.now().date()))
-        indeed_jobs_frame.to_csv(open(file_name_csv, 'a+', encoding='utf-8'), sep="|", na_rep=None)
+        indeed_jobs_frame.to_csv(open(file_name_csv, 'w+', encoding='utf-8'), sep="|", na_rep=None)

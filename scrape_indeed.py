@@ -4,24 +4,25 @@ from bs4 import BeautifulSoup
 
 class ScrapeIndeed(object):
 
-    def __init__(self):
+    def __init__(self, what, city, state):
         self.params = {}
         self.headers = {"Accept": "application/json"}
         self.url = "https://www.indeed.co.in/jobs"
-        self.what = None
-        self.city = None
-        self.state = None
+        self.what = what
+        self.city = city
+        self.state = state
         self.soups = []
-
-    def get_input(self):
-        self.what = input("Enter the role/job you want : ")
-        self.city = input("Enter the city of preference : ")
-        self.state = input("Enter the state of preference : ")
         self.params = {"q": self.what.strip(), "l": self.city.strip() + ", " + self.state.strip(), "start": 0}
+
+    # def get_input(self):
+    #     self.what = input("Enter the role/job you want : ")
+    #     self.city = input("Enter the city of preference : ")
+    #     self.state = input("Enter the state of preference : ")
+    #     self.params = {"q": self.what.strip(), "l": self.city.strip() + ", " + self.state.strip(), "start": 0}
 
     def start_process(self):
         try:
-            self.get_input()
+            #self.get_input()
 
             page_no = 1
             # Scrape all the results pages
