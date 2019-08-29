@@ -27,7 +27,7 @@ class ScrapeIndeed(object):
             page_no = 1
             # Scrape all the results pages
             while True:
-                print("In Page {page_no}".format(page_no=page_no))
+                print("Scraping Page {page_no}...".format(page_no=page_no))
 
                 self.params["start"] = (page_no - 1) * 10
                 response = requests.get(url=self.url, params=self.params, headers=self.headers, verify=False)

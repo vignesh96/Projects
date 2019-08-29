@@ -89,3 +89,5 @@ class ExtractJob(object):
         indeed_jobs_frame.columns = self.columns
         file_name_csv = os.path.join(os.getcwd(), "scrapped_data", "indeed-{}.csv".format(datetime.now().date()))
         indeed_jobs_frame.to_csv(open(file_name_csv, 'w+', encoding='utf-8'), sep="|", na_rep=None)
+
+        return indeed_jobs_frame

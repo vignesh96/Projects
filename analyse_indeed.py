@@ -1,5 +1,6 @@
 from extract_jobs import ExtractJob
 from scrape_indeed import ScrapeIndeed
+from map_skills import MapSkills
 import os
 import json
 if __name__ == "__main__":
@@ -13,4 +14,6 @@ if __name__ == "__main__":
         scrape_indeed = ScrapeIndeed(what=what, city=city, state=state)
         soups = scrape_indeed.start_process()
         extract_jobs = ExtractJob(soups=soups)
-        extract_jobs.start_extract()
+        jobs_frame = extract_jobs.start_extract()
+        map_skills = MapSkills(what, city, state)
+        map_skills.start_mapping()
