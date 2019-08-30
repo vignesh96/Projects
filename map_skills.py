@@ -1,10 +1,12 @@
+import json
 import os
-import pandas as pd
-from collections import Counter
 
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import requests
 from bs4 import BeautifulSoup
 from nltk.corpus import stopwords
-import requests
 
 
 class MapSkills(object):
@@ -32,7 +34,6 @@ class MapSkills(object):
             self.job_descriptions[i] = ' '.join(resultwords)
 
         # Compute word frequencies
-
         for desc in self.job_descriptions:
             for skill in self.skills:
                 if skill not in self.skill_freq:
@@ -40,19 +41,41 @@ class MapSkills(object):
                 else:
                     self.skill_freq[skill] += desc.count(skill.lower())
 
+        # Plot the frequencies
+        num_of_items = len(list(self.skill_freq.keys()))
+        ind = np.arange(0, num_of_items*2, 2)
+        plt.figure(figsize=(100, 50))
+        plt.bar(ind, list(self.skill_freq.values()), width=1, align='center', color='green')
+        plt.xlabel("Skill Sets", fontsize=5)
+        plt.ylabel("Demand of skill sets", fontsize=5)
+        plt.xticks(ind, list(self.skill_freq.keys()), rotation=90)
+        plt.title("Demand for the skill set {}".format(self.what))
+        plt.savefig(os.path.join(os.getcwd(), "plots", "{}{}-skill_sets.jpg".format(self.what, self.city)))
 
-
-
+    def plot_frequency_job_titles(self):
+        # Get frequency of job titles
+        # Plot frequency of top 10 job titles
+        job_title_df = self.indeed_data[:10]["job_title"]
+        job_freqs = job_title_df.value_counts().to_dict()
+        num_of_items = len(list(job_freqs.keys()))
+        ind = np.arange(0, num_of_items * 2, 2)
+        plt.figure(figsize=(100, 20))
+        plt.bar(ind, list(job_freqs.values()), width=1, align='center', color='green')
+        plt.xlabel("Job Titles", fontsize=5)
+        plt.ylabel("# of Job Titles", fontsize=5)
+        plt.xticks(ind, list(job_freqs.keys()), rotation=90)
+        plt.title("Number of Job Titles")
+        plt.savefig(os.path.join(os.getcwd(), "plots", "{}{}-job-titles.jpg".format(self.what, self.city)))
 
     def get_job_descriptions(self):
 
         job_description = []
         number_of_jobs = self.indeed_data.shape[0]
         data_jk = self.indeed_data["data_jk"].tolist()
-        # data_empn = self.indeed_data["data_empn"].tolist()
+
         companies = self.indeed_data["company"].tolist()
         job_titles = self.indeed_data["job_title"].tolist()
-        for i in range(5):
+        for i in range(20):
             params = {"cmp": companies[i], "t": job_titles[i], "jk": data_jk[i]}
             print(params)
             response = requests.get(url=self.url, params=params, headers=self.headers, verify=False)
@@ -65,7 +88,6 @@ class MapSkills(object):
             job_description.append(soup.text)
 
         return job_description
-
 
     def clean_data(self):
         # Drop sequence column
@@ -86,6 +108,7 @@ class MapSkills(object):
         print(self.indeed_data["salary"])
         salary_range = self.indeed_data["salary"].str.replace("a year", "")
         salary_range = salary_range.str.replace("a month", "")
+        salary_range = salary_range.str.replace("a day", "")
 
         # seperating salary range into two columns
         salary_range = salary_range.str.strip()
@@ -105,17 +128,29 @@ class MapSkills(object):
         self.indeed_data["salary"].fillna("0", inplace=True)
         self.indeed_data.loc[self.indeed_data.loc[:, "salary"].str.contains("year"), "salary_min (₹)"] //= 12
         self.indeed_data.loc[self.indeed_data.loc[:, "salary"].str.contains("year"), "salary_max (₹)"] //= 12
+        self.indeed_data.loc[self.indeed_data.loc[:, "salary"].str.contains("day"), "salary_min (₹)"] *= 30
+        self.indeed_data.loc[self.indeed_data.loc[:, "salary"].str.contains("day"), "salary_max (₹)"] *= 30
 
         print(self.indeed_data.dtypes)
 
     def start_mapping(self):
-        indeed_job_file_name = os.path.join(os.getcwd(), "scrapped_data", "indeed-2019-08-28.csv")
-        self.indeed_data = pd.read_csv(indeed_job_file_name, delimiter="|")
-        print(self.indeed_data.columns.values)
-        self.clean_data()
-        self.plot_skills()
+        scrapped_indeed_files = os.listdir(os.path.join(os.getcwd(), "scrapped_data"))
+
+        for scrapped_file in scrapped_indeed_files:
+            indeed_job_file_name = os.path.join(os.getcwd(), "scrapped_data", scrapped_file)
+            self.indeed_data = pd.read_csv(indeed_job_file_name, delimiter="|")
+            print(self.indeed_data.columns.values)
+            self.clean_data()
+            self.plot_skills()
+            self.plot_frequency_job_titles()
 
 
 if __name__ == "__main__":
-    map = MapSkills(what="game",city="Chennai",state="Tamil Nadu",skills=["artist", "Python", "C#", "Unity"])
-    map.start_mapping()
+    job_search_input_file_path = os.path.join(os.getcwd(), "input", "job_search_input.json")
+
+    job_search_input_data = json.load(open(job_search_input_file_path, "r"))
+
+    for job_input in job_search_input_data:
+        map = MapSkills(what=job_input["field"], city=job_input["city"], state=job_input["state"],
+                        skills=job_input["skills_needed"])
+        map.start_mapping()

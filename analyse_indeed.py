@@ -15,6 +15,4 @@ if __name__ == "__main__":
         scrape_indeed = ScrapeIndeed(what=what, city=city, state=state)
         soups = scrape_indeed.start_process()
         extract_jobs = ExtractJob(soups=soups)
-        jobs_frame = extract_jobs.start_extract()
-        map_skills = MapSkills(what, city, state, skills)
-        map_skills.start_mapping()
+        extract_jobs.start_extract()

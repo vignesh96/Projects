@@ -64,19 +64,6 @@ class ExtractJob(object):
         except Exception as exception_msg:
             print(exception_msg)
 
-    def plot_frequency_job_titles(self):
-        # Get frequency of job titles
-        job_title_df = pd.Series(self.job_titles_list)
-        job_freqs = job_title_df.value_counts().to_dict()
-        num_of_items = len(list(job_freqs.keys()))
-        ind = np.arange(0, num_of_items * 2, 2)
-        plt.figure(figsize=(100, 20))
-        plt.bar(ind, list(job_freqs.values()), width=1, align='center', color='green')
-        plt.xlabel("Job Titles", fontsize=5)
-        plt.ylabel("# of Job Titles", fontsize=5)
-        plt.xticks(ind, list(job_freqs.keys()), rotation=90)
-        plt.title("Number of Job Titles")
-        plt.show()
 
     def start_extract(self):
         for s in self.soups:

@@ -1,8 +1,8 @@
 [
   {
-    "field": "game",
+    "field": "data science",
     "city": "Chennai",
     "state": "Tamil Nadu",
-    "skills_needed": ["Java Script", "Python", "C#", "Unity"]
+    "skills_needed": ["Java", "Python", "Spark", "Hadoop", "Pig", "SQL"]
   }
 ]
