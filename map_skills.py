@@ -43,7 +43,7 @@ class MapSkills(object):
 
         # Plot the frequencies
         num_of_items = len(list(self.skill_freq.keys()))
-        ind = np.arange(0, num_of_items*2, 2)
+        ind = np.arange(0, num_of_items * 2, 2)
         plt.figure(figsize=(100, 50))
         plt.bar(ind, list(self.skill_freq.values()), width=1, align='center', color='green')
         plt.xlabel("Skill Sets", fontsize=5)

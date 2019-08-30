@@ -1,8 +1,6 @@
 import os
 from datetime import datetime
 
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 
 
@@ -63,7 +61,6 @@ class ExtractJob(object):
             return (jobs, jobs_info)
         except Exception as exception_msg:
             print(exception_msg)
-
 
     def start_extract(self):
         for s in self.soups:

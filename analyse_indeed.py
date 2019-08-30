@@ -1,8 +1,9 @@
+import json
+import os
+
 from extract_jobs import ExtractJob
 from scrape_indeed import ScrapeIndeed
-from map_skills import MapSkills
-import os
-import json
+
 if __name__ == "__main__":
     job_search_input_file_path = os.path.join(os.getcwd(), "input", "job_search_input.json")
 

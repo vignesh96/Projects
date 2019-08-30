@@ -22,7 +22,7 @@ class ScrapeIndeed(object):
 
     def start_process(self):
         try:
-            #self.get_input()
+            # self.get_input()
 
             page_no = 1
             # Scrape all the results pages
