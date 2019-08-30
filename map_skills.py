@@ -75,7 +75,7 @@ class MapSkills(object):
 
         companies = self.indeed_data["company"].tolist()
         job_titles = self.indeed_data["job_title"].tolist()
-        for i in range(20):
+        for i in range(number_of_jobs):
             params = {"cmp": companies[i], "t": job_titles[i], "jk": data_jk[i]}
             print(params)
             response = requests.get(url=self.url, params=params, headers=self.headers, verify=False)
