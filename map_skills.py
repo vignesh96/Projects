@@ -137,6 +137,9 @@ class MapSkills(object):
         scrapped_indeed_files = os.listdir(os.path.join(os.getcwd(), "scrapped_data"))
 
         for scrapped_file in scrapped_indeed_files:
+            if not scrapped_file.endswith(".csv"):
+                continue
+                
             indeed_job_file_name = os.path.join(os.getcwd(), "scrapped_data", scrapped_file)
             self.indeed_data = pd.read_csv(indeed_job_file_name, delimiter="|")
             print(self.indeed_data.columns.values)
